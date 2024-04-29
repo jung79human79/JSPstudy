@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper 태그 : 해당하는 영역 안쪽에 SQL구문을 작성 -->
+<mapper namespace="com.smhrd.database.DAO">
+
+	<insert id="addScrap"
+		parameterType="com.smhrd.model.ScrapListVO">
+		insert into scrapList (userId,conIdx,scrapDate,applyYN)
+		values(#{userId},#{conIdx},now(),"N")
+	</insert>
+
+	<delete id="delScrap"
+		parameterType="com.smhrd.model.ScrapListVO">
+		delete from scrapList
+		where conIdx = #{conIdx} and userId=#{userId}
+	</delete>
+
+	<select id="SelectScrapAll" parameterType="com.smhrd.model.ScrapListVO" resultType="com.smhrd.model.ScrapListVO">
+		SELECT cm.userId, c.conName,c.conIdx, c.conStartDate, c.conEndDate
+		FROM contestInfo c
+		JOIN scrapList sl ON c.conIdx = sl.conIdx
+		JOIN c_member cm ON sl.userId = cm.userId
+		where cm.userId = #{userId}
+		GROUP BY cm.userId, c.conName,c.conIdx, c.conStartDate, c.conEndDate;
+	</select>
+
+
+</mapper>
